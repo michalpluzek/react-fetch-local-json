@@ -1,34 +1,29 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Word from "./Word";
 
-class App extends React.Component {
-  state = {
-    words: [],
-    isLoaded: false,
-  };
+const App = () => {
+  const [words, setWords] = useState([]);
+  const [isLoaded, setIsLoaded] = useState(false);
 
-  componentDidMount() {
-    setTimeout(this.fetchData, 3000);
-  }
+  useEffect(() => {
+    setTimeout(fetchData, 3000);
+    console.log("useEffect");
+  }, []);
 
-  fetchData = () => {
+  const fetchData = () => {
     fetch("data/words.json")
       .then((response) => response.json())
       .then((data) => {
-        this.setState({
-          words: data.words,
-          isLoaded: true,
-        });
+        setWords(data.words);
+        setIsLoaded(true);
       });
   };
 
-  render() {
-    const words = this.state.words.map((word) => (
-      <Word key={word.id} nameEn={word.en} namePl={word.pl} />
-    ));
+  const _words = words.map((word) => (
+    <Word key={word.id} nameEn={word.en} namePl={word.pl} />
+  ));
 
-    return <ul>{this.state.isLoaded ? words : "Wczytuję dane"}</ul>;
-  }
-}
+  return <ul>{isLoaded ? _words : "Wczytuję dane"}</ul>;
+};
 
 export default App;
